@@ -11,6 +11,7 @@ import {
   Clock,
   GripVertical,
   GitBranch,
+  Eye,
 } from "lucide-react";
 import { useApp, topicProgress } from "@/store/app";
 import type { Topic, TopicStatus } from "@/types";
@@ -243,6 +244,13 @@ function TopicNode({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(topic.title);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
+  const extractedTags = useMemo(() => {
+    const matches = topic.notes?.match(/(^|\s)#([\w-]+)/g) ?? [];
+    const unique = new Set(matches.map((m) => m.trim().replace(/^#/, "")).filter(Boolean));
+    return Array.from(unique);
+  }, [topic.notes]);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: topic.id,
@@ -348,6 +356,17 @@ function TopicNode({
               <span>{children.length}</span>
             </div>
 
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setDetailsOpen(true);
+              }}
+              className="size-8 rounded-md hover:bg-accent grid place-items-center text-muted-foreground hover:text-foreground "
+              aria-label="View topic details"
+            >
+              <Eye className="size-4" />
+            </button>
+
             <select
               aria-label="Update topic status"
               value={topic.status}
@@ -423,6 +442,70 @@ function TopicNode({
             </div>
           </div>
         </div>
+
+        <Modal
+          open={detailsOpen}
+          onClose={() => setDetailsOpen(false)}
+          title="Topic details"
+          size="lg"
+        >
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <div className="text-sm text-muted-foreground">Title</div>
+              <div className="font-semibold tracking-tight">{topic.title}</div>
+            </div>
+
+            <div className="space-y-1">
+              <div className="text-sm text-muted-foreground">Description</div>
+              <div className="text-sm whitespace-pre-wrap">
+                {topic.description?.trim() ? topic.description : "—"}
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <div className="text-sm text-muted-foreground">Tags</div>
+              <div className="flex flex-wrap gap-2">
+                {extractedTags.length > 0 ? (
+                  extractedTags.map((t) => (
+                    <span
+                      key={t}
+                      className="px-3 py-1.5 rounded-full bg-accent text-sm text-muted-foreground"
+                    >
+                      #{t}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-sm text-muted-foreground">No tags</span>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="text-sm text-muted-foreground">Status</div>
+              <StatusBadge status={topic.status} />
+            </div>
+
+            {/* <div className="space-y-1">
+              <div className="text-sm text-muted-foreground">Notes</div>
+              <div className="text-sm whitespace-pre-wrap">
+                {topic.notes?.trim() ? topic.notes : "—"}
+              </div>
+            </div> */}
+
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="space-y-1">
+                <div className="text-muted-foreground text-xs">Date added</div>
+                <div className="font-medium">{format(topic.createdAt, "MMM d, yyyy")}</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-muted-foreground text-xs">Last studied</div>
+                <div className="font-medium">
+                  {topic.lastStudiedAt ? format(topic.lastStudiedAt, "MMM d, HH:mm") : "—"}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
 
         <AnimatePresence initial={false}>
           {open && children.length > 0 && (
