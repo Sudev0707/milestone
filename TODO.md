@@ -1,9 +1,6 @@
-# TODO
-
-- [ ] Add `references?: string[]` to `Problem` type
-- [ ] Persist references in `useApp().addProblem`
-- [ ] Update ProblemsView “Add problem” modal to collect reference links
-- [ ] Render reference links as clickable anchors in Problems list
-- [ ] Include references in search matching
-- [ ] Run typecheck/build to ensure no TS errors
+- [ ] Inspect existing ProblemsView.tsx reference links UI
+- [ ] Add per-problem expand/collapse state for reference links
+- [ ] Replace always-visible references block with clickable ChevronRight + animated show/hide
+- [ ] Ensure clicking chevron doesn’t trigger other actions
+- [ ] Run typecheck/lint/build to confirm no TS errors
 

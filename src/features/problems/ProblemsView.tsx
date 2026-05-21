@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Trash2, RotateCcw, Check } from "lucide-react";
+import { Plus, Search, Trash2, RotateCcw, Check, ChevronRight } from "lucide-react";
 import { useApp } from "@/store/app";
 import type { Difficulty, ProblemStatus } from "@/types";
 import { DifficultyBadge, ProblemStatusBadge } from "@/components/ui/Badges";
@@ -38,6 +38,7 @@ export function ProblemsView() {
   const [stat, setStat] = useState<"all" | ProblemStatus>("all");
   const [sort, setSort] = useState<"newest" | "title" | "difficulty">("newest");
   const [open, setOpen] = useState(false);
+  const [expandedReferences, setExpandedReferences] = useState<Set<string>>(new Set());
 
   const [form, setForm] = useState<{
     title: string;
@@ -52,7 +53,6 @@ export function ProblemsView() {
     tags: "",
     references: "",
   });
-
 
   const list = useMemo(() => {
     let r = problems.filter((p) => {
@@ -81,13 +81,16 @@ export function ProblemsView() {
         <div className="relative flex-1">
           <Search className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
-            value={q} onChange={(e) => setQ(e.target.value)}
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
             placeholder="Search problems or tags…"
             className="w-full h-10 pl-9 pr-3 rounded-md bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
           />
         </div>
         <div className="flex gap-2">
-          <label className="sr-only" id="filter-diff-label">Filter difficulty</label>
+          <label className="sr-only" id="filter-diff-label">
+            Filter difficulty
+          </label>
           <Select
             ariaLabel="Filter difficulty"
             value={diff}
@@ -100,13 +103,11 @@ export function ProblemsView() {
             ]}
           />
 
-
           <label className="sr-only">Filter status</label>
           <Select
             ariaLabel="Filter status"
             value={stat}
             onChange={(v) => setStat(v as never)}
-
             options={[
               ["all", "All status"],
               ["todo", "To do"],
@@ -125,11 +126,13 @@ export function ProblemsView() {
               ["difficulty", "Difficulty"],
             ]}
           />
-
         </div>
 
         <button
-          onClick={() => { setOpen(true); setForm((f) => ({ ...f, topicId: topics[0]?.id ?? "" })); }}
+          onClick={() => {
+            setOpen(true);
+            setForm((f) => ({ ...f, topicId: topics[0]?.id ?? "" }));
+          }}
           disabled={topics.length === 0}
           className="h-10 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5 disabled:opacity-50"
         >
@@ -146,7 +149,10 @@ export function ProblemsView() {
       <AnimatePresence initial={false}>
         {list.length === 0 ? (
           <motion.div
-            key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            key="empty"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="surface border border-dashed border-border rounded-2xl p-10 text-center text-sm text-muted-foreground"
           >
             No problems match your filters.
@@ -157,45 +163,95 @@ export function ProblemsView() {
               const topic = topics.find((t) => t.id === p.topicId);
               return (
                 <motion.li
-                  layout key={p.id}
-                  initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
-                  className="surface rounded-xl border border-border p-3.5 flex items-center gap-3"
+                  layout
+                  key={p.id}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="surface rounded-xl border border-border p-3.5 flex items-start gap-3"
                 >
                   <button
                     onClick={() => toggleSolved(p.id)}
                     className={`size-6 rounded-md border grid place-items-center transition ${
-                      p.status === "solved" ? "bg-success border-success text-success-foreground" : "border-border hover:border-foreground/40"
+                      p.status === "solved"
+                        ? "bg-success border-success text-success-foreground"
+                        : "border-border hover:border-foreground/40"
                     }`}
                     aria-label="Toggle solved"
                   >
                     {p.status === "solved" && <Check className="size-3.5" />}
                   </button>
                   <div className="min-w-0 flex-1">
-                    <div className={`text-sm font-medium truncate ${p.status === "solved" ? "line-through text-muted-foreground" : ""}`}>
+                    <div
+                      className={`text-sm font-medium truncate ${p.status === "solved" ? "line-through text-muted-foreground" : ""}`}
+                    >
                       {p.title}
                     </div>
-                <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
                       <DifficultyBadge d={p.difficulty} />
                       <ProblemStatusBadge s={p.status} />
-                      {topic && <span className="text-[11px] text-muted-foreground">· {topic.title}</span>}
+                      {topic && (
+                        <span className="text-[11px] text-muted-foreground">· {topic.title}</span>
+                      )}
                       {p.tags.map((t) => (
-                        <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">#{t}</span>
+                        <span
+                          key={t}
+                          className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground"
+                        >
+                          #{t}
+                        </span>
                       ))}
                     </div>
+                    {/* R */}
                     {p.references?.length ? (
-                      <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                        {p.references.map((u, idx) => (
-                          <a
-                            key={`${u}-${idx}`}
-                            href={u}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-[10px] px-1.5 py-0.5 rounded bg-accent text-foreground hover:opacity-90"
-                            title={u}
+                      <div className="mt-2">
+                        {/* <button
+                          type="button"
+                          onClick={() =>
+                            setExpandedReferences((s) => {
+                              const next = new Set(s);
+                              if (next.has(p.id)) next.delete(p.id);
+                              else next.add(p.id);
+                              return next;
+                            })
+                          }
+                          className="w-full inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                          aria-label={"Toggle reference links"}
+                        >
+                          <motion.span
+                            className="inline-flex"
+                            animate={{ rotate: expandedReferences.has(p.id) ? 90 : 0 }}
+                            transition={{ type: "spring", stiffness: 350, damping: 26 }}
                           >
-                            {shortenUrl(u)}
-                          </a>
-                        ))}
+                            <ChevronRight className="size-4" />
+                          </motion.span>
+                        </button> */}
+
+                        <AnimatePresence initial={false}>
+                          {expandedReferences.has(p.id) && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2, ease: [0.2, 0.8, 0.2, 1] }}
+                            >
+                              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                                {p.references.map((u, idx) => (
+                                  <a
+                                    key={`${u}-${idx}`}
+                                    href={u}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-[10px] px-1.5 py-0.5 rounded bg-accent text-foreground hover:opacity-90"
+                                    title={u}
+                                  >
+                                    {shortenUrl(u)}
+                                  </a>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                     ) : null}
                   </div>
@@ -212,6 +268,27 @@ export function ProblemsView() {
                     aria-label="Delete"
                   >
                     <Trash2 className="size-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpandedReferences((s) => {
+                        const next = new Set(s);
+                        if (next.has(p.id)) next.delete(p.id);
+                        else next.add(p.id);
+                        return next;
+                      })
+                    }
+                    className="size-8 rounded-md hover:bg-accent grid place-items-center text-muted-foreground hover:text-foreground"
+                    aria-label="Toggle reference links"
+                  >
+                    <motion.span
+                      className="inline-flex"
+                      animate={{ rotate: expandedReferences.has(p.id) ? 90 : 0 }}
+                      transition={{ type: "spring", stiffness: 350, damping: 26 }}
+                    >
+                      <ChevronRight className="size-4" />
+                    </motion.span>
                   </button>
                 </motion.li>
               );
@@ -242,15 +319,21 @@ export function ProblemsView() {
 
             notify.success("Problem added");
             setOpen(false);
-            setForm({ title: "", difficulty: "medium", topicId: form.topicId, tags: "", references: "" });
-
+            setForm({
+              title: "",
+              difficulty: "medium",
+              topicId: form.topicId,
+              tags: "",
+              references: "",
+            });
           }}
-
           className="space-y-3"
         >
           <Field label="Title">
             <input
-              autoFocus value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })}
+              autoFocus
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
               className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
               placeholder="Two Sum"
             />
@@ -258,15 +341,21 @@ export function ProblemsView() {
           <div className="grid grid-cols-2 gap-3">
             <Field label="Topic">
               <select
-                value={form.topicId} onChange={(e) => setForm({ ...form, topicId: e.target.value })}
+                value={form.topicId}
+                onChange={(e) => setForm({ ...form, topicId: e.target.value })}
                 className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none text-sm"
               >
-                {topics.map((t) => <option key={t.id} value={t.id}>{t.title}</option>)}
+                {topics.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.title}
+                  </option>
+                ))}
               </select>
             </Field>
             <Field label="Difficulty">
               <select
-                value={form.difficulty} onChange={(e) => setForm({ ...form, difficulty: e.target.value as Difficulty })}
+                value={form.difficulty}
+                onChange={(e) => setForm({ ...form, difficulty: e.target.value as Difficulty })}
                 className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none text-sm"
               >
                 <option value="easy">Easy</option>
@@ -277,7 +366,8 @@ export function ProblemsView() {
           </div>
           <Field label="Tags (comma-separated)">
             <input
-              value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })}
+              value={form.tags}
+              onChange={(e) => setForm({ ...form, tags: e.target.value })}
               placeholder="arrays, hashmap"
               className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
             />
@@ -291,8 +381,19 @@ export function ProblemsView() {
             />
           </Field>
           <div className="flex justify-end gap-2 pt-1">
-            <button type="button" onClick={() => setOpen(false)} className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent">Cancel</button>
-            <button type="submit" className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90">Add</button>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90"
+            >
+              Add
+            </button>
           </div>
         </form>
       </Modal>
@@ -314,18 +415,25 @@ function Select<T extends string>({
   onChange,
   options,
   ariaLabel,
-}: { value: T; onChange: (v: T) => void; options: [T, string][]; ariaLabel?: string }) {
+}: {
+  value: T;
+  onChange: (v: T) => void;
+  options: [T, string][];
+  ariaLabel?: string;
+}) {
   return (
     <select
       value={value}
       onChange={(e) => onChange(e.target.value as T)}
+      title={ariaLabel}
       aria-label={ariaLabel}
       className="h-10 px-2.5 rounded-md bg-muted border border-border outline-none text-sm"
     >
-
-      {options.map(([v, label]) => <option key={v} value={v}>{label}</option>)}
+      {options.map(([v, label]) => (
+        <option key={v} value={v}>
+          {label}
+        </option>
+      ))}
     </select>
   );
 }
-
-
