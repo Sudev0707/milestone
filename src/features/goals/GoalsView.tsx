@@ -25,7 +25,7 @@ export function GoalsView() {
         </div>
         <button
           onClick={() => setOpen(true)}
-          className="h-9 px-3 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5"
+          className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5"
         >
           <Plus className="size-4" /> New goal
         </button>
@@ -118,28 +118,28 @@ export function GoalsView() {
           <label className="block">
             <span className="block text-xs text-muted-foreground mb-1.5">Title</span>
             <input autoFocus value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })}
-              className="w-full h-10 px-3 rounded-lg bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm" />
+              className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm" />
           </label>
           <div className="grid grid-cols-2 gap-3">
             <label className="block">
               <span className="block text-xs text-muted-foreground mb-1.5">Target hours</span>
               <input type="number" min={1} value={form.targetHours} onChange={(e) => setForm({ ...form, targetHours: Number(e.target.value) })}
-                className="w-full h-10 px-3 rounded-lg bg-muted border border-border outline-none text-sm" />
+                className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none text-sm" />
             </label>
             <label className="block">
               <span className="block text-xs text-muted-foreground mb-1.5">Deadline</span>
               <input type="date" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })}
-                className="w-full h-10 px-3 rounded-lg bg-muted border border-border outline-none text-sm" />
+                className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none text-sm" />
             </label>
           </div>
           <label className="block">
             <span className="block text-xs text-muted-foreground mb-1.5">Description (optional)</span>
             <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
-              className="w-full min-h-[80px] p-3 rounded-lg bg-muted border border-border outline-none text-sm resize-y" />
+              className="w-full min-h-[80px] p-3 rounded-md bg-muted border border-border outline-none text-sm resize-y" />
           </label>
           <div className="flex justify-end gap-2 pt-1">
-            <button type="button" onClick={() => setOpen(false)} className="h-9 px-3 rounded-lg border border-border text-sm hover:bg-accent">Cancel</button>
-            <button type="submit" className="h-9 px-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">Create</button>
+            <button type="button" onClick={() => setOpen(false)} className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent">Cancel</button>
+            <button type="submit" className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">Create</button>
           </div>
         </form>
       </Modal>

@@ -105,11 +105,11 @@ export function AppShell() {
           <input
             autoFocus value={quickTitle} onChange={(e) => setQuickTitle(e.target.value)}
             placeholder="What do you want to learn?"
-            className="w-full h-10 px-3 rounded-lg bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
+            className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
           />
           <div className="flex justify-end gap-2">
-            <button type="button" onClick={() => setQuickOpen(false)} className="h-9 px-3 rounded-lg border border-border text-sm hover:bg-accent">Cancel</button>
-            <button type="submit" className="h-9 px-3 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90">Create</button>
+            <button type="button" onClick={() => setQuickOpen(false)} className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent">Cancel</button>
+            <button type="submit" className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90">Create</button>
           </div>
         </form>
       </Modal>

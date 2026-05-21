@@ -29,6 +29,8 @@ export function RoadmapView() {
 
   const [modal, setModal] = useState<{ parentId: string | null } | null>(null);
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [tags, setTags] = useState("");
 
   const roots = useMemo(
     () =>
@@ -57,9 +59,11 @@ export function RoadmapView() {
           <p className="text-sm text-muted-foreground">Organize what you're learning. Drag to reorder.</p>
         </div>
         <button
-          onClick={() => { setModal({ parentId: null }); setTitle(""); }}
-          className="h-9 px-3 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5"
+          onClick={() => { setModal({ parentId: null }); setTitle(""); setDescription(""); setTags(""); }}
+          aria-label="Add topic"
+          className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5"
         >
+
           <Plus className="size-4" /> Add topic
         </button>
       </div>
@@ -93,24 +97,71 @@ export function RoadmapView() {
           onSubmit={(e) => {
             e.preventDefault();
             if (!title.trim()) return;
-            addTopic({ title: title.trim(), parentId: modal?.parentId ?? null });
+
+            addTopic({
+              title: title.trim(),
+              parentId: modal?.parentId ?? null,
+              description: description.trim() || undefined,
+            });
+
             notify.success("Topic added");
             setModal(null);
+            setTitle("");
+            setDescription("");
+            setTags("");
           }}
           className="space-y-3"
         >
-          <input
-            autoFocus
-            placeholder="e.g. Data Structures"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full h-10 px-3 rounded-lg bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
-          />
+          <div className="space-y-3">
+            <div>
+              <label className="block font-bold text-xs text-muted-foreground mb-1.5" htmlFor="topic-title">Title</label>
+              <input
+                id="topic-title"
+                autoFocus
+                placeholder="e.g. Data Structures"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-xs text-muted-foreground mb-1.5" htmlFor="topic-description">Description (optional)</label>
+              <textarea
+                id="topic-description"
+                 placeholder="short summary"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full min-h-[50px] p-3 rounded-md bg-muted border border-border outline-none text-sm resize-y focus:ring-1 focus:ring-green-700"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-xs text-muted-foreground mb-1.5" htmlFor="topic-tags">Tags (comma-separated)</label>
+              <input
+                id="topic-tags"
+                placeholder="e.g. arrays, hashmap"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
+              />
+            </div>
+          </div>
+
           <div className="flex justify-end gap-2">
-            <button type="button" onClick={() => setModal(null)} className="h-9 px-3 rounded-lg border border-border text-sm hover:bg-accent">
+            <button
+              type="button"
+              onClick={() => {
+                setModal(null);
+                setTitle("");
+                setDescription("");
+                setTags("");
+              }}
+              className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent"
+            >
               Cancel
             </button>
-            <button type="submit" className="h-9 px-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">
+            <button type="submit" className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90">
               Create
             </button>
           </div>
@@ -255,7 +306,7 @@ function TopicNode({
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.96, y: -4 }}
                     transition={{ duration: 0.12 }}
-                    className="absolute right-0 mt-1 w-44 surface rounded-lg border border-border shadow-elevated z-20 p-1"
+                    className="absolute right-0 mt-1 w-44 surface rounded-md border border-border shadow-elevated z-20 p-1"
                     onMouseLeave={() => setMenuOpen(false)}
                   >
                     <MenuBtn onClick={() => { setEditing(true); setMenuOpen(false); }}><Pencil className="size-3.5" /> Rename</MenuBtn>
@@ -344,7 +395,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
       </p>
       <button
         onClick={onAdd}
-        className="mt-5 h-9 px-4 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 inline-flex items-center gap-1.5"
+        className="mt-5 h-9 px-4 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 inline-flex items-center gap-1.5"
       >
         <Plus className="size-4" /> Create your first topic
       </button>

@@ -28,7 +28,7 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
   return (
     <aside
       className={cn(
-        "hidden md:flex flex-col border-r border-border surface transition-[width] duration-300 ease-out",
+        "hidden md:flex flex-col border-r border-border surface transition-[width] duration-300 ease-out sticky top-0 z-20ss h-[100dvh] overflow-hidden",
         collapsed ? "w-[72px]" : "w-[248px]",
       )}
     >
@@ -44,7 +44,7 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
         )}
       </div>
 
-      <nav className="flex-1 px-2.5 py-4 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 px-2.5 py-4 space-y-0.5 overflow-hidden">
         {items.map((item) => {
           const Icon = item.icon;
           const active = view === item.id;
@@ -53,7 +53,7 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
               key={item.id}
               onClick={() => setView(item.id)}
               className={cn(
-                "relative w-full h-10 px-3 rounded-lg flex items-center gap-3 text-sm font-medium transition-colors",
+                "relative w-full h-10 px-3 rounded-md flex items-center gap-3 text-sm font-medium transition-colors",
                 "text-muted-foreground hover:text-foreground hover:bg-accent",
                 active && "text-foreground bg-accent",
                 collapsed && "justify-center px-0",
@@ -63,7 +63,7 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
               {active && (
                 <motion.span
                   layoutId="sidebar-active"
-                  className="absolute inset-0 rounded-lg bg-accent"
+                  className="absolute inset-0 rounded-md bg-accent"
                   transition={{ type: "spring", stiffness: 400, damping: 32 }}
                 />
               )}

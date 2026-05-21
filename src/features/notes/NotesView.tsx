@@ -131,7 +131,7 @@ function CodeBlock({ children, className }: { children: string; className?: stri
       >
         {copied ? <Check className="size-3.5 text-success" /> : <Copy className="size-3.5" />}
       </button>
-      <pre className="overflow-x-auto rounded-lg">
+      <pre className="overflow-x-auto rounded-md">
         <code className={className}>{children}</code>
       </pre>
     </div>

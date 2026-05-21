@@ -32,7 +32,7 @@ export function Topbar({
       <div className="h-full px-4 md:px-6 flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
-          className="size-9 rounded-lg hover:bg-accent grid place-items-center text-muted-foreground hover:text-foreground transition-colors"
+          className="size-9 rounded-md hover:bg-accent grid place-items-center text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Toggle sidebar"
         >
           <Menu className="size-[18px]" />
@@ -45,7 +45,7 @@ export function Topbar({
         <button
           onClick={() => togglePalette(true)}
           className={cn(
-            "h-9 hidden sm:flex items-center gap-2 px-3 rounded-lg border border-border text-sm",
+            "h-9 hidden sm:flex items-center gap-2 px-3 rounded-md border border-border text-sm",
             "text-muted-foreground hover:text-foreground hover:bg-accent transition-colors",
             "min-w-[260px]",
           )}
@@ -59,7 +59,7 @@ export function Topbar({
 
         <button
           onClick={() => togglePalette(true)}
-          className="sm:hidden size-9 rounded-lg hover:bg-accent grid place-items-center text-muted-foreground hover:text-foreground"
+          className="sm:hidden size-9 rounded-md hover:bg-accent grid place-items-center text-muted-foreground hover:text-foreground"
           aria-label="Search"
         >
           <Search className="size-[18px]" />
@@ -67,7 +67,7 @@ export function Topbar({
 
         <button
           onClick={onQuickAdd}
-          className="h-9 px-3 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-1.5"
+          className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-1.5"
         >
           <Plus className="size-4" />
           <span className="hidden sm:inline">New topic</span>
@@ -75,7 +75,7 @@ export function Topbar({
 
         <button
           onClick={toggleTheme}
-          className="size-9 rounded-lg hover:bg-accent grid place-items-center text-muted-foreground hover:text-foreground transition-colors"
+          className="size-9 rounded-md hover:bg-accent grid place-items-center text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Toggle theme"
         >
           {theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}

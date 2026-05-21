@@ -45,7 +45,7 @@ export function ProblemsView() {
           <input
             value={q} onChange={(e) => setQ(e.target.value)}
             placeholder="Search problems or tags…"
-            className="w-full h-10 pl-9 pr-3 rounded-lg bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
+            className="w-full h-10 pl-9 pr-3 rounded-md bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
           />
         </div>
         <div className="flex gap-2">
@@ -59,7 +59,7 @@ export function ProblemsView() {
         <button
           onClick={() => { setOpen(true); setForm((f) => ({ ...f, topicId: topics[0]?.id ?? "" })); }}
           disabled={topics.length === 0}
-          className="h-10 px-3 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5 disabled:opacity-50"
+          className="h-10 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5 disabled:opacity-50"
         >
           <Plus className="size-4" /> Add problem
         </button>
@@ -152,7 +152,7 @@ export function ProblemsView() {
           <Field label="Title">
             <input
               autoFocus value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })}
-              className="w-full h-10 px-3 rounded-lg bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
+              className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
               placeholder="Two Sum"
             />
           </Field>
@@ -160,7 +160,7 @@ export function ProblemsView() {
             <Field label="Topic">
               <select
                 value={form.topicId} onChange={(e) => setForm({ ...form, topicId: e.target.value })}
-                className="w-full h-10 px-3 rounded-lg bg-muted border border-border outline-none text-sm"
+                className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none text-sm"
               >
                 {topics.map((t) => <option key={t.id} value={t.id}>{t.title}</option>)}
               </select>
@@ -168,7 +168,7 @@ export function ProblemsView() {
             <Field label="Difficulty">
               <select
                 value={form.difficulty} onChange={(e) => setForm({ ...form, difficulty: e.target.value as Difficulty })}
-                className="w-full h-10 px-3 rounded-lg bg-muted border border-border outline-none text-sm"
+                className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none text-sm"
               >
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
@@ -180,12 +180,12 @@ export function ProblemsView() {
             <input
               value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })}
               placeholder="arrays, hashmap"
-              className="w-full h-10 px-3 rounded-lg bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
+              className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
             />
           </Field>
           <div className="flex justify-end gap-2 pt-1">
-            <button type="button" onClick={() => setOpen(false)} className="h-9 px-3 rounded-lg border border-border text-sm hover:bg-accent">Cancel</button>
-            <button type="submit" className="h-9 px-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">Add</button>
+            <button type="button" onClick={() => setOpen(false)} className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent">Cancel</button>
+            <button type="submit" className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">Add</button>
           </div>
         </form>
       </Modal>
@@ -208,7 +208,7 @@ function Select<T extends string>({
   return (
     <select
       value={value} onChange={(e) => onChange(e.target.value as T)}
-      className="h-10 px-2.5 rounded-lg bg-muted border border-border outline-none text-sm"
+      className="h-10 px-2.5 rounded-md bg-muted border border-border outline-none text-sm"
     >
       {options.map(([v, label]) => <option key={v} value={v}>{label}</option>)}
     </select>

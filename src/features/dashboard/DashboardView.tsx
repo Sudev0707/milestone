@@ -54,13 +54,13 @@ export function DashboardView() {
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <button
             onClick={() => setView("focus")}
-            className="h-9 px-4 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 transition flex items-center gap-1.5"
+            className="h-9 px-4 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 transition flex items-center gap-1.5"
           >
             Start a focus session <ArrowRight className="size-4" />
           </button>
           <button
             onClick={() => setView("roadmap")}
-            className="h-9 px-4 rounded-lg border border-border text-sm font-medium hover:bg-accent transition"
+            className="h-9 px-4 rounded-md border border-border text-sm font-medium hover:bg-accent transition"
           >
             Open roadmap
           </button>
@@ -222,7 +222,7 @@ function Row({ label, value }: { label: string; value: number }) {
 
 function EmptyMini({ label }: { label: string }) {
   return (
-    <div className="h-24 rounded-lg border border-dashed border-border grid place-items-center text-xs text-muted-foreground">
+    <div className="h-24 rounded-md border border-dashed border-border grid place-items-center text-xs text-muted-foreground">
       {label}
     </div>
   );

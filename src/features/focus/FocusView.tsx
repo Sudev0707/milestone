@@ -128,19 +128,19 @@ export function FocusView() {
         </div>
 
         <div className="flex items-center justify-center gap-2 mt-2">
-          <button onClick={reset} className="h-10 px-4 rounded-lg border border-border hover:bg-accent text-sm flex items-center gap-1.5">
+          <button onClick={reset} className="h-10 px-4 rounded-md border border-border hover:bg-accent text-sm flex items-center gap-1.5">
             <RotateCcw className="size-4" /> Reset
           </button>
           {!running ? (
-            <button onClick={start} className="h-10 px-6 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5">
+            <button onClick={start} className="h-10 px-6 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5">
               <Play className="size-4" /> Start
             </button>
           ) : (
-            <button onClick={pause} className="h-10 px-6 rounded-lg bg-foreground text-background text-sm font-medium hover:opacity-90 flex items-center gap-1.5">
+            <button onClick={pause} className="h-10 px-6 rounded-md bg-foreground text-background text-sm font-medium hover:opacity-90 flex items-center gap-1.5">
               <Pause className="size-4" /> Pause
             </button>
           )}
-          <button onClick={skip} className="h-10 px-4 rounded-lg border border-border hover:bg-accent text-sm flex items-center gap-1.5">
+          <button onClick={skip} className="h-10 px-4 rounded-md border border-border hover:bg-accent text-sm flex items-center gap-1.5">
             <SkipForward className="size-4" /> Skip
           </button>
         </div>

@@ -44,10 +44,10 @@ export function SettingsView() {
 
       <Section title="Backup & restore" description="Your data is stored locally in this browser. Export regularly.">
         <div className="flex flex-wrap gap-2">
-          <button onClick={onExport} className="h-9 px-3 rounded-lg border border-border text-sm hover:bg-accent flex items-center gap-1.5">
+          <button onClick={onExport} className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent flex items-center gap-1.5">
             <Download className="size-4" /> Export JSON
           </button>
-          <button onClick={() => fileRef.current?.click()} className="h-9 px-3 rounded-lg border border-border text-sm hover:bg-accent flex items-center gap-1.5">
+          <button onClick={() => fileRef.current?.click()} className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent flex items-center gap-1.5">
             <Upload className="size-4" /> Import JSON
           </button>
           <input
@@ -60,7 +60,7 @@ export function SettingsView() {
       <Section title="Danger zone" description="Permanently delete all topics, problems, goals, sessions, and notes from this browser.">
         <button
           onClick={() => { if (confirm("Delete everything? This cannot be undone.")) { resetAll(); notify.success("All data cleared"); } }}
-          className="h-9 px-3 rounded-lg border border-destructive/40 text-destructive text-sm hover:bg-destructive/10 flex items-center gap-1.5"
+          className="h-9 px-3 rounded-md border border-destructive/40 text-destructive text-sm hover:bg-destructive/10 flex items-center gap-1.5"
         >
           <Trash2 className="size-4" /> Reset all data
         </button>
@@ -91,7 +91,7 @@ function Section({ title, description, children }: { title: string; description?
 function ThemeBtn({ label, active, onClick, icon }: { label: string; active: boolean; onClick: () => void; icon: React.ReactNode }) {
   return (
     <button onClick={onClick}
-      className={`h-9 px-3 rounded-lg text-sm flex items-center gap-2 border transition ${
+      className={`h-9 px-3 rounded-md text-sm flex items-center gap-2 border transition ${
         active ? "bg-foreground text-background border-foreground" : "border-border hover:bg-accent"
       }`}>
       {icon} {label}
@@ -101,7 +101,7 @@ function ThemeBtn({ label, active, onClick, icon }: { label: string; active: boo
 
 function Kbd({ label, k }: { label: string; k: string }) {
   return (
-    <li className="flex items-center justify-between surface-elevated border border-border rounded-lg px-3 h-10">
+    <li className="flex items-center justify-between surface-elevated border border-border rounded-md px-3 h-10">
       <span className="text-muted-foreground">{label}</span>
       <kbd className="text-[11px] font-mono border border-border rounded px-1.5 py-0.5">{k}</kbd>
     </li>
