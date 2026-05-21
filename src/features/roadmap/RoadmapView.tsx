@@ -1,8 +1,16 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronRight, Plus, MoreHorizontal, Trash2, Pencil,
-  FileText, Code2, Clock, GripVertical,
+  ChevronRight,
+  Plus,
+  MoreHorizontal,
+  Trash2,
+  Pencil,
+  FileText,
+  Code2,
+  Clock,
+  GripVertical,
+  GitBranch,
 } from "lucide-react";
 import { useApp, topicProgress } from "@/store/app";
 import type { Topic, TopicStatus } from "@/types";
@@ -11,11 +19,18 @@ import { Modal } from "@/components/ui/Modal";
 import { celebrate, notify } from "@/lib/feedback";
 import { ProgressRing } from "@/components/ui/ProgressRing";
 import {
-  DndContext, PointerSensor, useSensor, useSensors, closestCenter,
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
   type DragEndEvent,
 } from "@dnd-kit/core";
 import {
-  SortableContext, useSortable, verticalListSortingStrategy, arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { format } from "date-fns";
@@ -56,20 +71,31 @@ export function RoadmapView() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold tracking-tight">Your roadmap</h2>
-          <p className="text-sm text-muted-foreground">Organize what you're learning. Drag to reorder.</p>
+          <p className="text-sm text-muted-foreground">
+            Organize what you're learning. Drag to reorder.
+          </p>
         </div>
         <button
-          onClick={() => { setModal({ parentId: null }); setTitle(""); setDescription(""); setTags(""); }}
+          onClick={() => {
+            setModal({ parentId: null });
+            setTitle("");
+            setDescription("");
+            setTags("");
+          }}
           aria-label="Add topic"
           className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5"
         >
-
           <Plus className="size-4" /> Add topic
         </button>
       </div>
 
       {roots.length === 0 ? (
-        <EmptyState onAdd={() => { setModal({ parentId: null }); setTitle(""); }} />
+        <EmptyState
+          onAdd={() => {
+            setModal({ parentId: null });
+            setTitle("");
+          }}
+        />
       ) : (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
           <SortableContext items={roots.map((r) => r.id)} strategy={verticalListSortingStrategy}>
@@ -79,7 +105,10 @@ export function RoadmapView() {
                   key={t.id}
                   topic={t}
                   level={0}
-                  onAddChild={(parentId) => { setModal({ parentId }); setTitle(""); }}
+                  onAddChild={(parentId) => {
+                    setModal({ parentId });
+                    setTitle("");
+                  }}
                   problems={problems}
                 />
               ))}
@@ -114,7 +143,12 @@ export function RoadmapView() {
         >
           <div className="space-y-3">
             <div>
-              <label className="block font-bold text-xs text-muted-foreground mb-1.5" htmlFor="topic-title">Title</label>
+              <label
+                className="block font-bold text-xs text-muted-foreground mb-1.5"
+                htmlFor="topic-title"
+              >
+                Title
+              </label>
               <input
                 id="topic-title"
                 autoFocus
@@ -126,10 +160,15 @@ export function RoadmapView() {
             </div>
 
             <div>
-              <label className="block font-bold text-xs text-muted-foreground mb-1.5" htmlFor="topic-description">Description (optional)</label>
+              <label
+                className="block font-bold text-xs text-muted-foreground mb-1.5"
+                htmlFor="topic-description"
+              >
+                Description (optional)
+              </label>
               <textarea
                 id="topic-description"
-                 placeholder="short summary"
+                placeholder="short summary"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full min-h-[50px] p-3 rounded-md bg-muted border border-border outline-none text-sm resize-y focus:ring-1 focus:ring-green-700"
@@ -137,7 +176,12 @@ export function RoadmapView() {
             </div>
 
             <div>
-              <label className="block font-bold text-xs text-muted-foreground mb-1.5" htmlFor="topic-tags">Tags (comma-separated)</label>
+              <label
+                className="block font-bold text-xs text-muted-foreground mb-1.5"
+                htmlFor="topic-tags"
+              >
+                Tags (comma-separated)
+              </label>
               <input
                 id="topic-tags"
                 placeholder="e.g. arrays, hashmap"
@@ -161,7 +205,10 @@ export function RoadmapView() {
             >
               Cancel
             </button>
-            <button type="submit" className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90">
+            <button
+              type="submit"
+              className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90"
+            >
               Create
             </button>
           </div>
@@ -172,7 +219,10 @@ export function RoadmapView() {
 }
 
 function TopicNode({
-  topic, level, onAddChild, problems,
+  topic,
+  level,
+  onAddChild,
+  problems,
 }: {
   topic: Topic;
   level: number;
@@ -187,16 +237,16 @@ function TopicNode({
   const setView = useApp((s) => s.setView);
   const reorder = useApp((s) => s.reorderTopics);
 
-  const children = topics
-    .filter((t) => t.parentId === topic.id)
-    .sort((a, b) => a.order - b.order);
+  const children = topics.filter((t) => t.parentId === topic.id).sort((a, b) => a.order - b.order);
 
   const [open, setOpen] = useState(level < 1);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(topic.title);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: topic.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: topic.id,
+  });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -211,10 +261,7 @@ function TopicNode({
 
   return (
     <li ref={setNodeRef} style={style}>
-      <motion.div
-        layout
-        className="surface rounded-xl border border-border shadow-soft"
-      >
+      <motion.div layout className="surface rounded-xl border border-border shadow-soft">
         <div className="flex items-stretch">
           <button
             {...attributes}
@@ -230,45 +277,79 @@ function TopicNode({
             className="size-9 grid place-items-center text-muted-foreground hover:text-foreground"
             aria-label="Toggle"
           >
-            <motion.span animate={{ rotate: open ? 90 : 0 }} transition={{ type: "spring", stiffness: 350, damping: 26 }}>
+            <motion.span
+              animate={{ rotate: open ? 90 : 0 }}
+              transition={{ type: "spring", stiffness: 350, damping: 26 }}
+            >
               <ChevronRight className="size-4" />
             </motion.span>
           </button>
 
           <div className="flex-1 min-w-0 py-3 pr-3 flex items-center gap-3">
-            <ProgressRing value={pct} size={36} stroke={4} label={<span className="text-[10px]">{pct}%</span>} />
+            <ProgressRing
+              value={pct}
+              size={36}
+              stroke={4}
+              label={<span className="text-[10px]">{pct}%</span>}
+            />
             <div className="min-w-0 flex-1">
               {editing ? (
                 <input
                   autoFocus
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
-                  onBlur={() => { updateTopic(topic.id, { title: draft.trim() || topic.title }); setEditing(false); }}
+                  onBlur={() => {
+                    updateTopic(topic.id, { title: draft.trim() || topic.title });
+                    setEditing(false);
+                  }}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") { (e.target as HTMLInputElement).blur(); }
-                    if (e.key === "Escape") { setDraft(topic.title); setEditing(false); }
+                    if (e.key === "Enter") {
+                      (e.target as HTMLInputElement).blur();
+                    }
+                    if (e.key === "Escape") {
+                      setDraft(topic.title);
+                      setEditing(false);
+                    }
                   }}
                   className="h-7 w-full bg-muted px-2 rounded-md border border-border outline-none text-sm"
                 />
               ) : (
                 <button
                   className="text-left font-medium text-sm truncate hover:underline underline-offset-4 decoration-border"
-                  onClick={() => { setActive(topic.id); setView("notes"); }}
+                  onClick={() => {
+                    setActive(topic.id);
+                    setView("notes");
+                  }}
                 >
                   {topic.title}
                 </button>
               )}
               <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
                 <StatusBadge status={topic.status} />
-                <span className="inline-flex items-center gap-1"><FileText className="size-3" />{noteCount} note{noteCount === 1 ? "" : "s"}</span>
-                <span className="inline-flex items-center gap-1"><Code2 className="size-3" />{probCount} problem{probCount === 1 ? "" : "s"}</span>
+                <span className="inline-flex items-center gap-1">
+                  <FileText className="size-3" />
+                  {noteCount} note{noteCount === 1 ? "" : "s"}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <Code2 className="size-3" />
+                  {probCount} problem{probCount === 1 ? "" : "s"}
+                </span>
                 {topic.lastStudiedAt && (
-                  <span className="inline-flex items-center gap-1"><Clock className="size-3" />{format(topic.lastStudiedAt, "MMM d, HH:mm")}</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="size-3" />
+                    {format(topic.lastStudiedAt, "MMM d, HH:mm")}
+                  </span>
                 )}
               </div>
             </div>
 
+            <div className="hidden md:flex items-center gap-1 text-[12px] text-muted-foreground leading-none mr-1 select-none">
+              <GitBranch className="size-3" />
+              <span>{children.length}</span>
+            </div>
+
             <select
+              aria-label="Update topic status"
               value={topic.status}
               onChange={(e) => {
                 const v = e.target.value as TopicStatus;
@@ -309,12 +390,28 @@ function TopicNode({
                     className="absolute right-0 mt-1 w-44 surface rounded-md border border-border shadow-elevated z-20 p-1"
                     onMouseLeave={() => setMenuOpen(false)}
                   >
-                    <MenuBtn onClick={() => { setEditing(true); setMenuOpen(false); }}><Pencil className="size-3.5" /> Rename</MenuBtn>
-                    <MenuBtn onClick={() => { setActive(topic.id); setView("notes"); setMenuOpen(false); }}><FileText className="size-3.5" /> Open notes</MenuBtn>
+                    <MenuBtn
+                      onClick={() => {
+                        setEditing(true);
+                        setMenuOpen(false);
+                      }}
+                    >
+                      <Pencil className="size-3.5" /> Rename
+                    </MenuBtn>
+                    <MenuBtn
+                      onClick={() => {
+                        setActive(topic.id);
+                        setView("notes");
+                        setMenuOpen(false);
+                      }}
+                    >
+                      <FileText className="size-3.5" /> Open notes
+                    </MenuBtn>
                     <MenuBtn
                       destructive
                       onClick={() => {
-                        if (confirm(`Delete "${topic.title}" and all its content?`)) deleteTopic(topic.id);
+                        if (confirm(`Delete "${topic.title}" and all its content?`))
+                          deleteTopic(topic.id);
                         setMenuOpen(false);
                       }}
                     >
@@ -344,11 +441,18 @@ function TopicNode({
                     const { active, over } = e;
                     if (!over || active.id === over.id) return;
                     const ids = children.map((c) => c.id);
-                    const next = arrayMove(ids, ids.indexOf(active.id as string), ids.indexOf(over.id as string));
+                    const next = arrayMove(
+                      ids,
+                      ids.indexOf(active.id as string),
+                      ids.indexOf(over.id as string),
+                    );
                     reorder(topic.id, next);
                   }}
                 >
-                  <SortableContext items={children.map((c) => c.id)} strategy={verticalListSortingStrategy}>
+                  <SortableContext
+                    items={children.map((c) => c.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
                     <ul className="space-y-2 border-l border-border pl-3">
                       {children.map((c) => (
                         <TopicNode
@@ -372,8 +476,14 @@ function TopicNode({
 }
 
 function MenuBtn({
-  children, onClick, destructive,
-}: { children: React.ReactNode; onClick: () => void; destructive?: boolean }) {
+  children,
+  onClick,
+  destructive,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  destructive?: boolean;
+}) {
   return (
     <button
       onClick={onClick}
@@ -391,7 +501,8 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
     <div className="surface rounded-2xl border border-dashed border-border p-12 text-center">
       <h3 className="text-base font-semibold tracking-tight">Build your learning path</h3>
       <p className="text-sm text-muted-foreground mt-1 max-w-md mx-auto">
-        Start with a high-level topic like "System Design" or "React." Add subtopics, notes, and problems as you go.
+        Start with a high-level topic like "System Design" or "React." Add subtopics, notes, and
+        problems as you go.
       </p>
       <button
         onClick={onAdd}
