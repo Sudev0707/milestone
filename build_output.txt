@@ -1,0 +1,20 @@
+
+> build
+> vite build --mode production
+
+[36mvite v7.3.3 [32mbuilding tanstack_start_app environment for production...[36m[39m
+transforming...
+[32m✓[39m 182 modules transformed.
+[31m✗[39m Build failed in 3.91s
+[31merror during build:
+[31m[commonjs--resolver] Missing "#tanstack-router-entry" specifier in "@tanstack/start-server-core" package[31m
+    at e (file:///d:/NATIVE/focus-flow-main/milestone/node_modules/vite/dist/node/chunks/config.js:6667:8)
+    at n (file:///d:/NATIVE/focus-flow-main/milestone/node_modules/vite/dist/node/chunks/config.js:6679:14)
+    at f (file:///d:/NATIVE/focus-flow-main/milestone/node_modules/vite/dist/node/chunks/config.js:6711:26)
+    at resolveExportsOrImports (file:///d:/NATIVE/focus-flow-main/milestone/node_modules/vite/dist/node/chunks/config.js:32847:45)
+    at resolveSubpathImports (file:///d:/NATIVE/focus-flow-main/milestone/node_modules/vite/dist/node/chunks/config.js:32637:20)
+    at Object.handler (file:///d:/NATIVE/focus-flow-main/milestone/node_modules/vite/dist/node/chunks/config.js:32508:29)
+    at Object.handler (file:///d:/NATIVE/focus-flow-main/milestone/node_modules/vite/dist/node/chunks/config.js:33726:13)
+    at file:///d:/NATIVE/focus-flow-main/milestone/node_modules/rollup/dist/es/shared/node-entry.js:22988:40
+    at async PluginDriver.hookFirstAndGetPlugin (file:///d:/NATIVE/focus-flow-main/milestone/node_modules/rollup/dist/es/shared/node-entry.js:22870:28)
+    at async resolveId (file:///d:/NATIVE/focus-flow-main/milestone/node_modules/rollup/dist/es/shared/node-entry.js:21321:26)[39m
