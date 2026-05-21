@@ -53,7 +53,9 @@ interface State {
   reorderTopics: (parentId: string | null, orderedIds: string[]) => void;
   setTopicNotes: (id: string, notes: string) => void;
 
-  addProblem: (input: { topicId: string; title: string; difficulty: Difficulty; tags?: string[]; notes?: string }) => void;
+addProblem: (input: { topicId: string; title: string; difficulty: Difficulty; tags?: string[]; notes?: string; references?: string[] }) => void;
+
+
   updateProblem: (id: string, patch: Partial<Problem>) => void;
   deleteProblem: (id: string) => void;
   toggleProblemSolved: (id: string) => void;
@@ -190,14 +192,23 @@ export const useApp = create<State>()(
         }));
       },
 
-      addProblem: ({ topicId, title, difficulty, tags = [], notes }) => {
+addProblem: ({ topicId, title, difficulty, tags = [], notes, references = [] }) => {
         const p: Problem = {
-          id: uid(), topicId, title, difficulty, status: "todo",
-          retries: 0, tags, notes, createdAt: Date.now(),
+          id: uid(),
+          topicId,
+          title,
+          difficulty,
+          status: "todo",
+          retries: 0,
+          tags,
+          notes,
+          references: references.length ? references : undefined,
+          createdAt: Date.now(),
         };
         set((s) => ({ problems: [p, ...s.problems] }));
         get().addXp(5);
       },
+
       updateProblem: (id, patch) =>
         set((s) => ({ problems: s.problems.map((p) => (p.id === id ? { ...p, ...patch } : p)) })),
       deleteProblem: (id) =>

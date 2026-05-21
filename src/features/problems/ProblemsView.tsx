@@ -7,6 +7,24 @@ import { DifficultyBadge, ProblemStatusBadge } from "@/components/ui/Badges";
 import { Modal } from "@/components/ui/Modal";
 import { notify } from "@/lib/feedback";
 
+function normalizeReferenceUrl(u: string) {
+  const s = u.trim();
+  if (!s) return s;
+  if (/^https?:\/\//i.test(s)) return s;
+  return `https://${s}`;
+}
+
+function shortenUrl(u: string) {
+  try {
+    const url = new URL(u);
+    const path = url.pathname.replace(/\/$/, "");
+    const trimmed = path.length > 24 ? path.slice(0, 24) + "…" : path;
+    return `${url.hostname}${trimmed}`;
+  } catch {
+    return u.length > 28 ? u.slice(0, 28) + "…" : u;
+  }
+}
+
 export function ProblemsView() {
   const problems = useApp((s) => s.problems);
   const topics = useApp((s) => s.topics);
@@ -21,12 +39,32 @@ export function ProblemsView() {
   const [sort, setSort] = useState<"newest" | "title" | "difficulty">("newest");
   const [open, setOpen] = useState(false);
 
-  const [form, setForm] = useState<{ title: string; difficulty: Difficulty; topicId: string; tags: string }>({
-    title: "", difficulty: "medium", topicId: topics[0]?.id ?? "", tags: "",
+  const [form, setForm] = useState<{
+    title: string;
+    difficulty: Difficulty;
+    topicId: string;
+    tags: string;
+    references: string;
+  }>({
+    title: "",
+    difficulty: "medium",
+    topicId: topics[0]?.id ?? "",
+    tags: "",
+    references: "",
   });
 
+
   const list = useMemo(() => {
-    let r = problems.filter((p) => !q || p.title.toLowerCase().includes(q.toLowerCase()) || p.tags.some(t => t.toLowerCase().includes(q.toLowerCase())));
+    let r = problems.filter((p) => {
+      const qq = q.toLowerCase();
+      return (
+        !q ||
+        p.title.toLowerCase().includes(qq) ||
+        p.tags.some((t) => t.toLowerCase().includes(qq)) ||
+        (p.references ?? []).some((u) => u.toLowerCase().includes(qq))
+      );
+    });
+
     if (diff !== "all") r = r.filter((p) => p.difficulty === diff);
     if (stat !== "all") r = r.filter((p) => p.status === stat);
     if (sort === "title") r = [...r].sort((a, b) => a.title.localeCompare(b.title));
@@ -49,13 +87,47 @@ export function ProblemsView() {
           />
         </div>
         <div className="flex gap-2">
-          <Select value={diff} onChange={(v) => setDiff(v as never)}
-            options={[["all","All difficulties"],["easy","Easy"],["medium","Medium"],["hard","Hard"]]} />
-          <Select value={stat} onChange={(v) => setStat(v as never)}
-            options={[["all","All status"],["todo","To do"],["solved","Solved"],["review","Review"]]} />
-          <Select value={sort} onChange={(v) => setSort(v as never)}
-            options={[["newest","Newest"],["title","Title"],["difficulty","Difficulty"]]} />
+          <label className="sr-only" id="filter-diff-label">Filter difficulty</label>
+          <Select
+            ariaLabel="Filter difficulty"
+            value={diff}
+            onChange={(v) => setDiff(v as never)}
+            options={[
+              ["all", "All difficulties"],
+              ["easy", "Easy"],
+              ["medium", "Medium"],
+              ["hard", "Hard"],
+            ]}
+          />
+
+
+          <label className="sr-only">Filter status</label>
+          <Select
+            ariaLabel="Filter status"
+            value={stat}
+            onChange={(v) => setStat(v as never)}
+
+            options={[
+              ["all", "All status"],
+              ["todo", "To do"],
+              ["solved", "Solved"],
+              ["review", "Review"],
+            ]}
+          />
+          <label className="sr-only">Sort</label>
+          <Select
+            ariaLabel="Sort"
+            value={sort}
+            onChange={(v) => setSort(v as never)}
+            options={[
+              ["newest", "Newest"],
+              ["title", "Title"],
+              ["difficulty", "Difficulty"],
+            ]}
+          />
+
         </div>
+
         <button
           onClick={() => { setOpen(true); setForm((f) => ({ ...f, topicId: topics[0]?.id ?? "" })); }}
           disabled={topics.length === 0}
@@ -102,7 +174,7 @@ export function ProblemsView() {
                     <div className={`text-sm font-medium truncate ${p.status === "solved" ? "line-through text-muted-foreground" : ""}`}>
                       {p.title}
                     </div>
-                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                <div className="mt-1 flex flex-wrap items-center gap-1.5">
                       <DifficultyBadge d={p.difficulty} />
                       <ProblemStatusBadge s={p.status} />
                       {topic && <span className="text-[11px] text-muted-foreground">· {topic.title}</span>}
@@ -110,6 +182,22 @@ export function ProblemsView() {
                         <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">#{t}</span>
                       ))}
                     </div>
+                    {p.references?.length ? (
+                      <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                        {p.references.map((u, idx) => (
+                          <a
+                            key={`${u}-${idx}`}
+                            href={u}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-[10px] px-1.5 py-0.5 rounded bg-accent text-foreground hover:opacity-90"
+                            title={u}
+                          >
+                            {shortenUrl(u)}
+                          </a>
+                        ))}
+                      </div>
+                    ) : null}
                   </div>
                   <button
                     onClick={() => updateProblem(p.id, { retries: p.retries + 1 })}
@@ -141,18 +229,29 @@ export function ProblemsView() {
               title: form.title.trim(),
               topicId: form.topicId,
               difficulty: form.difficulty,
-              tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
+              tags: form.tags
+                .split(",")
+                .map((t) => t.trim())
+                .filter(Boolean),
+              references: form.references
+                .split(/[,\n]/)
+                .map((u) => u.trim())
+                .filter(Boolean)
+                .map(normalizeReferenceUrl),
             });
+
             notify.success("Problem added");
             setOpen(false);
-            setForm({ title: "", difficulty: "medium", topicId: form.topicId, tags: "" });
+            setForm({ title: "", difficulty: "medium", topicId: form.topicId, tags: "", references: "" });
+
           }}
+
           className="space-y-3"
         >
           <Field label="Title">
             <input
               autoFocus value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })}
-              className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
+              className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
               placeholder="Two Sum"
             />
           </Field>
@@ -180,12 +279,20 @@ export function ProblemsView() {
             <input
               value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })}
               placeholder="arrays, hashmap"
-              className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
+              className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
+            />
+          </Field>
+          <Field label="Reference links/URLs (comma-separated)">
+            <input
+              value={form.references}
+              onChange={(e) => setForm({ ...form, references: e.target.value })}
+              placeholder="https://leetcode.com/..., https://..."
+              className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
             />
           </Field>
           <div className="flex justify-end gap-2 pt-1">
             <button type="button" onClick={() => setOpen(false)} className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent">Cancel</button>
-            <button type="submit" className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">Add</button>
+            <button type="submit" className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90">Add</button>
           </div>
         </form>
       </Modal>
@@ -203,14 +310,22 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function Select<T extends string>({
-  value, onChange, options,
-}: { value: T; onChange: (v: T) => void; options: [T, string][] }) {
+  value,
+  onChange,
+  options,
+  ariaLabel,
+}: { value: T; onChange: (v: T) => void; options: [T, string][]; ariaLabel?: string }) {
   return (
     <select
-      value={value} onChange={(e) => onChange(e.target.value as T)}
+      value={value}
+      onChange={(e) => onChange(e.target.value as T)}
+      aria-label={ariaLabel}
       className="h-10 px-2.5 rounded-md bg-muted border border-border outline-none text-sm"
     >
+
       {options.map(([v, label]) => <option key={v} value={v}>{label}</option>)}
     </select>
   );
 }
+
+

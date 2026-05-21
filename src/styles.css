@@ -42,7 +42,7 @@
 :root {
   --radius: 0.75rem;
   /* Premium light: off-white background, true zinc surfaces */
-  --background: oklch(0.985 0.002 247);
+  --background: oklch(96.046% 0.01888 93.686);
   --foreground: oklch(0.16 0.01 260);
   --surface: oklch(1 0 0);
   --surface-elevated: oklch(0.995 0.001 247);

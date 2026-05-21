@@ -11,9 +11,11 @@ export interface Problem {
   notes?: string;
   retries: number;
   tags: string[];
+  references?: string[];
   createdAt: number;
   completedAt?: number;
 }
+
 
 export interface Topic {
   id: string;
