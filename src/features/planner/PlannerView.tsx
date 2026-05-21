@@ -56,7 +56,7 @@ export function PlannerView() {
           <input value={title} onChange={(e) => setTitle(e.target.value)}
             placeholder="Add a task…"
             className="flex-1 h-10 px-3 rounded-lg bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm" />
-          <button className="h-10 px-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5">
+          <button className="h-10 px-3 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5">
             <Plus className="size-4" /> Add
           </button>
         </form>

@@ -109,7 +109,7 @@ export function AppShell() {
           />
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => setQuickOpen(false)} className="h-9 px-3 rounded-lg border border-border text-sm hover:bg-accent">Cancel</button>
-            <button type="submit" className="h-9 px-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">Create</button>
+            <button type="submit" className="h-9 px-3 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90">Create</button>
           </div>
         </form>
       </Modal>

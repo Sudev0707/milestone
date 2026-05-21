@@ -59,7 +59,7 @@ export function ProblemsView() {
         <button
           onClick={() => { setOpen(true); setForm((f) => ({ ...f, topicId: topics[0]?.id ?? "" })); }}
           disabled={topics.length === 0}
-          className="h-10 px-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5 disabled:opacity-50"
+          className="h-10 px-3 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5 disabled:opacity-50"
         >
           <Plus className="size-4" /> Add problem
         </button>

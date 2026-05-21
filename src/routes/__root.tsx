@@ -72,10 +72,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lumen — Learn deliberately" },
+      { title: "Milestone — Learn deliberately" },
       { name: "description", content: "A premium personal learning tracker: roadmaps, notes, problems, goals, focus timer, and analytics — local-first." },
       { name: "theme-color", content: "#0f0f14" },
-      { property: "og:title", content: "Lumen — Learn deliberately" },
+      { property: "og:title", content: "Milestone — Learn deliberately" },
       { property: "og:description", content: "Track topics, take notes, log focus sessions, and watch your progress compound." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

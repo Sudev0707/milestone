@@ -33,12 +33,12 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
       )}
     >
       <div className="h-16 flex items-center gap-2.5 px-4 border-b border-border">
-        <div className="size-9 rounded-xl bg-primary text-primary-foreground grid place-items-center shrink-0">
+        <div className="size-9 rounded-md bg-lime-600 text-primary-foreground grid place-items-center shrink-0">
           <GraduationCap className="size-5" />
         </div>
         {!collapsed && (
           <div className="flex flex-col leading-tight overflow-hidden">
-            <span className="font-semibold tracking-tight">Lumen</span>
+            <span className="font-semibold tracking-tight">Milestone</span>
             <span className="text-[11px] text-muted-foreground">Learn deliberately</span>
           </div>
         )}

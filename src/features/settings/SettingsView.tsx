@@ -17,7 +17,7 @@ export function SettingsView() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `lumen-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `Milestone-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     notify.success("Backup downloaded");

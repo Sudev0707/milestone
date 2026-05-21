@@ -132,7 +132,7 @@ export function FocusView() {
             <RotateCcw className="size-4" /> Reset
           </button>
           {!running ? (
-            <button onClick={start} className="h-10 px-6 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5">
+            <button onClick={start} className="h-10 px-6 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5">
               <Play className="size-4" /> Start
             </button>
           ) : (

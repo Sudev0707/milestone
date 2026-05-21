@@ -25,7 +25,7 @@ export function GoalsView() {
         </div>
         <button
           onClick={() => setOpen(true)}
-          className="h-9 px-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5"
+          className="h-9 px-3 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5"
         >
           <Plus className="size-4" /> New goal
         </button>

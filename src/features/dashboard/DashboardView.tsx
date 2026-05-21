@@ -54,7 +54,7 @@ export function DashboardView() {
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <button
             onClick={() => setView("focus")}
-            className="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition flex items-center gap-1.5"
+            className="h-9 px-4 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 transition flex items-center gap-1.5"
           >
             Start a focus session <ArrowRight className="size-4" />
           </button>

@@ -58,7 +58,7 @@ export function RoadmapView() {
         </div>
         <button
           onClick={() => { setModal({ parentId: null }); setTitle(""); }}
-          className="h-9 px-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5"
+          className="h-9 px-3 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5"
         >
           <Plus className="size-4" /> Add topic
         </button>
@@ -344,7 +344,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
       </p>
       <button
         onClick={onAdd}
-        className="mt-5 h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 inline-flex items-center gap-1.5"
+        className="mt-5 h-9 px-4 rounded-lg bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 inline-flex items-center gap-1.5"
       >
         <Plus className="size-4" /> Create your first topic
       </button>

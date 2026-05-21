@@ -323,7 +323,7 @@ export const useApp = create<State>()(
         }),
     }),
     {
-      name: "lumen-learn:v1",
+      name: "Milestone-learn:v1",
       storage: createJSONStorage(() => (typeof window !== "undefined" ? localStorage : (undefined as never))),
       partialize: (s) => ({
         settings: s.settings,
