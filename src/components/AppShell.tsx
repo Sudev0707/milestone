@@ -32,6 +32,9 @@ export function AppShell() {
   const [collapsed, setCollapsed] = useState(false);
   const [quickOpen, setQuickOpen] = useState(false);
   const [quickTitle, setQuickTitle] = useState("");
+  const [quickDescription, setQuickDescription] = useState("");
+  const [quickTags, setQuickTags] = useState("");
+  const [quickUrl, setQuickUrl] = useState("");
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -94,21 +97,113 @@ export function AppShell() {
           onSubmit={(e) => {
             e.preventDefault();
             if (!quickTitle.trim()) return;
-            addTopic({ title: quickTitle.trim() });
+            const tags = quickTags
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean);
+
+            addTopic({
+              title: quickTitle.trim(),
+              description: quickDescription.trim() || undefined,
+              tags: tags.length ? tags : undefined,
+              url: quickUrl.trim() || undefined,
+            });
             notify.success("Topic added");
             setQuickTitle("");
+            setQuickDescription("");
+            setQuickTags("");
+            setQuickUrl("");
             setQuickOpen(false);
             setView("roadmap");
           }}
           className="space-y-3"
         >
-          <input
-            autoFocus value={quickTitle} onChange={(e) => setQuickTitle(e.target.value)}
-            placeholder="What do you want to learn?"
-            className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-2 focus:ring-ring text-sm"
-          />
+           <div className="space-y-3">
+            <div>
+              <label
+                className="block font-bold text-xs text-muted-foreground mb-1.5"
+                htmlFor="topic-title"
+                title="Title"
+              >
+                Title
+              </label>
+              <input
+                id="topic-title"
+                autoFocus
+                placeholder="e.g. Data Structures"
+                value={quickTitle}
+                onChange={(e) => setQuickTitle(e.target.value)}
+                className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
+              />
+            </div>
+
+            <div>
+              <label
+                className="block font-bold text-xs text-muted-foreground mb-1.5"
+                htmlFor="topic-description"
+                title="Description (optional)"
+              >
+                Description (optional)
+              </label>
+              <textarea
+                id="topic-description"
+                placeholder="short summary"
+                title="Description"
+                value={quickDescription}
+                onChange={(e) => setQuickDescription(e.target.value)}
+                className="w-full min-h-[50px] p-3 rounded-md bg-muted border border-border outline-none text-sm resize-y focus:ring-1 focus:ring-green-700"
+              />
+            </div>
+
+            <div>
+              <label
+                className="block font-bold text-xs text-muted-foreground mb-1.5"
+                htmlFor="topic-tags"
+              >
+                Tags (comma-separated)
+              </label>
+              <input
+                id="topic-tags"
+                placeholder="e.g. arrays, hashmap"
+                title="Tags"
+                value={quickTags}
+                onChange={(e) => setQuickTags(e.target.value)}
+                className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
+              />
+            </div>
+
+            <div>
+              <label
+                className="block font-bold text-xs text-muted-foreground mb-1.5"
+                htmlFor="topic-url"
+                title="URL (optional)"
+              >
+                URL (optional comma-separated)
+              </label>
+              <input
+                id="topic-url"
+                placeholder="https://..., https://..."
+                title="URL"
+                value={quickUrl}
+                onChange={(e) => setQuickUrl(e.target.value)}
+                className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
+              />
+            </div>
+          </div>
           <div className="flex justify-end gap-2">
-            <button type="button" onClick={() => setQuickOpen(false)} className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent">Cancel</button>
+            <button
+              type="button"
+              onClick={() => {
+                setQuickOpen(false);
+                setQuickTitle("");
+                setQuickDescription("");
+                setQuickTags("");
+                setQuickUrl("");
+              }}
+              className="h-9 px-3 rounded-md border border-border text-sm hover:bg-accent"
+            >
+              Cancel
+            </button>
             <button type="submit" className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90">Create</button>
           </div>
         </form>

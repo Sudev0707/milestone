@@ -47,6 +47,10 @@ export function RoadmapView() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
+  const [url, setUrl] = useState("");
+
+
+
 
   const roots = useMemo(
     () =>
@@ -82,7 +86,9 @@ export function RoadmapView() {
             setTitle("");
             setDescription("");
             setTags("");
+            setUrl("");
           }}
+
           aria-label="Add topic"
           className="h-9 px-3 rounded-md bg-lime-600 text-primary-foreground text-sm font-medium hover:opacity-90 flex items-center gap-1.5"
         >
@@ -128,10 +134,17 @@ export function RoadmapView() {
             e.preventDefault();
             if (!title.trim()) return;
 
+            const parsedUrls = url
+              .split(",")
+              .map((u) => u.trim())
+              .filter(Boolean);
+
             addTopic({
               title: title.trim(),
               parentId: modal?.parentId ?? null,
               description: description.trim() || undefined,
+              // Store as a normalized comma-separated string (no spaces) to avoid href like "..., %20..."
+              url: parsedUrls.length ? parsedUrls.join(",") : undefined,
             });
 
             notify.success("Topic added");
@@ -139,6 +152,8 @@ export function RoadmapView() {
             setTitle("");
             setDescription("");
             setTags("");
+            setUrl("");
+
           }}
           className="space-y-3"
         >
@@ -147,6 +162,7 @@ export function RoadmapView() {
               <label
                 className="block font-bold text-xs text-muted-foreground mb-1.5"
                 htmlFor="topic-title"
+                title="Title"
               >
                 Title
               </label>
@@ -164,12 +180,14 @@ export function RoadmapView() {
               <label
                 className="block font-bold text-xs text-muted-foreground mb-1.5"
                 htmlFor="topic-description"
+                title="Description (optional)"
               >
                 Description (optional)
               </label>
               <textarea
                 id="topic-description"
                 placeholder="short summary"
+                title="Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full min-h-[50px] p-3 rounded-md bg-muted border border-border outline-none text-sm resize-y focus:ring-1 focus:ring-green-700"
@@ -186,8 +204,26 @@ export function RoadmapView() {
               <input
                 id="topic-tags"
                 placeholder="e.g. arrays, hashmap"
+                title="Tags"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
+                className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
+              />
+            </div>
+             <div>
+              <label
+                className="block font-bold text-xs text-muted-foreground mb-1.5"
+                htmlFor="topic-url"
+                title="URL (optional)"
+              >
+                URL (optional comma-separated)
+              </label>
+              <input
+                id="topic-url"
+                placeholder="https://..., https://..."
+                title="URL"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
                 className="w-full h-10 px-3 rounded-md bg-muted border border-border outline-none focus:ring-1 focus:ring-green-700 text-sm"
               />
             </div>
@@ -479,6 +515,44 @@ function TopicNode({
                 )}
               </div>
             </div>
+
+            <div className="space-y-1">
+              <div className="text-sm text-muted-foreground">URL</div>
+              <div className="text-sm">
+                {topic.url?.trim() ? (
+                  (() => {
+                    const urls = topic.url
+                      .split(",")
+                      .map((u) => u.trim())
+                      .filter(Boolean);
+
+                    if (!urls.length) return <span className="text-muted-foreground">—</span>;
+
+                    return (
+                      <div className="flex flex-row gap-2 flex-wrap">
+                        {urls.map((u) => (
+                          <a
+                            key={u}
+                            href={u}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-foreground underline underline-offset-4 hover:opacity-90 break-all"
+                          >
+                            {u}
+                          </a>
+                        ))}
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <span className="text-muted-foreground">—</span>
+                )}
+              </div>
+            </div>
+
+
+
+
 
             <div className="flex items-center gap-3">
               <div className="text-sm text-muted-foreground">Status</div>

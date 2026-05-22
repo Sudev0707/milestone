@@ -22,6 +22,10 @@ export interface Topic {
   parentId: string | null;
   title: string;
   description?: string;
+  /** Comma-separated / free-form tags saved explicitly */
+  tags?: string[];
+  /** Optional resource URL */
+  url?: string;
   status: TopicStatus;
   notes: string;
   order: number;

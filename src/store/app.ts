@@ -46,7 +46,7 @@ interface State {
   setTheme: (t: Theme) => void;
   updateSettings: (p: Partial<Settings>) => void;
 
-  addTopic: (input: { title: string; parentId?: string | null; description?: string }) => Topic;
+  addTopic: (input: { title: string; parentId?: string | null; description?: string; tags?: string[]; url?: string }) => Topic;
   updateTopic: (id: string, patch: Partial<Topic>) => void;
   deleteTopic: (id: string) => void;
   setTopicStatus: (id: string, status: TopicStatus) => void;
@@ -127,7 +127,7 @@ export const useApp = create<State>()(
       setTheme: (theme) => set((s) => ({ settings: { ...s.settings, theme } })),
       updateSettings: (p) => set((s) => ({ settings: { ...s.settings, ...p } })),
 
-      addTopic: ({ title, parentId = null, description }) => {
+      addTopic: ({ title, parentId = null, description, tags, url }) => {
         const now = Date.now();
         const siblings = get().topics.filter((t) => t.parentId === parentId);
         const topic: Topic = {
@@ -135,6 +135,8 @@ export const useApp = create<State>()(
           parentId,
           title,
           description,
+          tags: tags?.length ? tags : undefined,
+          url: url?.trim() ? url.trim() : undefined,
           status: "not-started",
           notes: "",
           order: siblings.length,
